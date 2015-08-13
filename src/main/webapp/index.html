@@ -1,0 +1,27 @@
+/**
+ * Created by ZhangKejie on 2015/8/12.
+ */
+<html>
+<head>
+    <script src="/jquery/jquery.min.js">
+    </script>
+    <script>
+        $(document).ready(function(){
+            $("button").click(function() {
+                $.ajax({
+                    type: 'post',
+                    url: '/lms/trans',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({dbtype:"mysql",url:"127.0.0.1",port:"3306",dbname:"chatroom",username:"root",password:"123456",column:[{name:"id"},{name:"password"}],tableName: "account"}),
+                    dataType: 'json'
+                });
+            })
+        });
+    </script>
+</head>
+<body>
+
+<button>向页面发送 HTTP POST 请求，并获得返回的结果</button>
+
+</body>
+</html>

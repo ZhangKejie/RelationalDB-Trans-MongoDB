@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.5.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'LMS'
+    version = '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")/*{
+        exclude(group:'org.springframework.boot',module:'spring-boot-starter-tomcat')
+    }*/
+    // providedCompile("org.apache.tomcat:tomcat-servlet-api:7.0.42")
+    compile("mysql:mysql-connector-java:5.1.36")
+    //compile("com.oracle:ojdbc14:10.2.0.3.0")
+    compile("org.springframework:springloaded:1.2.4.RELEASE")
+    //compile("net.sf.json-lib:json-lib:2.4")
+    compile("org.json:json:20141113")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+
+
+    //providedCompile("org.springframework.boot:spring-boot-starter-tomcat:1.2.5.RELEASE")
+    /*user the local jar*/
+    //compile files("...jar")
+    compile fileTree(dir:"C:\\Users\\Asus55\\.IntelliJIdea14\\config\\jdbc-drivers",include:"*.jar")
+    compile fileTree(dir:"F:\\jar\\json",include:"*.jar")
+}
+
+/*
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}*/
