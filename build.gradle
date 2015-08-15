@@ -41,8 +41,9 @@ dependencies {
     //providedCompile("org.springframework.boot:spring-boot-starter-tomcat:1.2.5.RELEASE")
     /*user the local jar*/
     //compile files("...jar")
-    compile fileTree(dir:"C:\\Users\\Asus55\\.IntelliJIdea14\\config\\jdbc-drivers",include:"*.jar")
-    compile fileTree(dir:"F:\\jar\\json",include:"*.jar")
+    //compile fileTree(dir:"C:\\Users\\Asus55\\.IntelliJIdea14\\config\\jdbc-drivers",include:"*.jar")
+    //compile fileTree(dir:"F:\\jar\\json",include:"*.jar")
+    compile fileTree(dir:".\\lib",include:"*.jar")
 }
 
 /*
