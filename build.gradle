@@ -43,7 +43,7 @@ dependencies {
     //compile files("...jar")
     //compile fileTree(dir:"C:\\Users\\Asus55\\.IntelliJIdea14\\config\\jdbc-drivers",include:"*.jar")
     //compile fileTree(dir:"F:\\jar\\json",include:"*.jar")
-    compile fileTree(dir:".\\lib",include:"*.jar")
+    compile fileTree(dir:"./lib",include:"*.jar")
 }
 
 /*
