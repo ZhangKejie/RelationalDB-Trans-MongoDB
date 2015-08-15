@@ -27,14 +27,15 @@ public class DbUtil {
      * @param username 数据库用户名
      * @param password 数据库密码
      */
-    public void SQLConnect(String dbtype,String url,String port,String dbname,String username,String password){
+    public boolean SQLConnect(String dbtype,String url,String port,String dbname,String username,String password){
         if (dbtype.equals("mysql")){ //判断数据库类型
-            this.MySQLConnect(url,port,dbname,username,password);
+            return this.MySQLConnect(url,port,dbname,username,password);
         }else if (dbtype.equals("oracle")) {
-            this.OracleConnect(url,port,dbname,username,password);
+            return this.OracleConnect(url,port,dbname,username,password);
         }else if(dbtype.equals("sqlserver")){
-            this.SQLServerConnect(url,port,dbname,username,password);
+            return this.SQLServerConnect(url,port,dbname,username,password);
         }
+        return false;
     }
 
     /**
@@ -46,7 +47,7 @@ public class DbUtil {
      * @param username 数据库用户名
      * @param password 数据库密码
      */
-    public void MySQLConnect(String url,String port,String dbname,String username,String password){
+    public boolean MySQLConnect(String url,String port,String dbname,String username,String password){
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection
@@ -54,10 +55,13 @@ public class DbUtil {
             System.out.println("Connected Mysql!");//测试语言判断数据库连接是否成功
             stat = conn.createStatement();
            // dbm = conn.getMetaData();
+            return true;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -71,7 +75,7 @@ public class DbUtil {
      * @param username 数据库用户名
      * @param password 数据库密码
      */
-    public void OracleConnect(String url,String port,String dbname,String username,String password){
+    public boolean OracleConnect(String url,String port,String dbname,String username,String password){
         try {
             Class.forName("oracle.jdbc.OracleDriver");
             String u = "jdbc:oracle:thin:@" + url + ":" + port + ":" + dbname;
@@ -79,10 +83,12 @@ public class DbUtil {
             conn = DriverManager.getConnection(u,username,password);
             stat = conn.createStatement();
            // dbm = conn.getMetaData();
+            return true;
         } catch (Exception e1) {
             e1.printStackTrace();
+            return false;
         }
-            System.out.println("Connected Oracle!");//测试语言判断数据库连接是否成功；
+            //System.out.println("Connected Oracle!");//测试语言判断数据库连接是否成功；
     }
 
     /**
@@ -94,15 +100,17 @@ public class DbUtil {
      * @param username 数据库用户名
      * @param password 数据库密码
      */
-    public void SQLServerConnect(String url,String port,String dbname,String username,String password){
+    public boolean SQLServerConnect(String url,String port,String dbname,String username,String password) {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            conn = DriverManager.getConnection("jdbc:sqlserver://" + url + ":" + port + ";databaseName=" + dbname,username,password);
+            conn = DriverManager.getConnection("jdbc:sqlserver://" + url + ":" + port + ";databaseName=" + dbname, username, password);
             stat = conn.createStatement();
             //dbm = conn.getMetaData();
+            return true;
         } catch (Exception e1) {
             e1.printStackTrace();
+            return false;
         }
-        System.out.println("Connected SQLServer!");//测试语言判断数据库连接是否成功；
+        //System.out.println("Connected SQLServer!");//测试语言判断数据库连接是否成功；
     }
 }

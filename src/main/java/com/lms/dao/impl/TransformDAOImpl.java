@@ -60,7 +60,10 @@ public class TransformDAOImpl implements TransformDAO {
         String tableName = (String) tables.get("name");
         String sql = "select" + " " + columnName + " from " + tableName;
         //System.out.println(sql);
-        dbUtil.SQLConnect(dbtype, url, port, dbname, username, password); //调用数据库连接接口对数据库进行连接
+        boolean flag = dbUtil.SQLConnect(dbtype, url, port, dbname, username, password); //调用数据库连接接口对数据库进行连接
+        if(flag==false){
+            return "{\"Meta\":{\"Code\":200,\"Message\":\"数据库连接失败，请核对数据库地址及账号密码！\"},\"Data\":" + "[]" + "}";
+        }
         //判断是否需要取出外键数据。
         if(fk.equals("true")) {
             try {
@@ -187,7 +190,7 @@ public class TransformDAOImpl implements TransformDAO {
             jsonArray = JSONArray.fromObject(list);//将list对象转化为jsonArray的类型
             str = jsonArray.toString();
             // System.out.println(str);
-            return str;
+            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":" + str + "}";
         }else{//不需要取出外键数据
             try {
                 dbUtil.rs = dbUtil.stat.executeQuery(sql);//数据库操作后得到的结果
@@ -210,7 +213,7 @@ public class TransformDAOImpl implements TransformDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return str;
+            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":" + str + "}";
         }
     }
 

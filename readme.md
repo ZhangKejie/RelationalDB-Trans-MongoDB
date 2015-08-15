@@ -34,3 +34,6 @@
 
 ### Ver. 1.2 (20150815) ###
 *Add file lib.
+
+### Ver. 1.3 (20150815) ###
+Return error message.
