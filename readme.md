@@ -20,7 +20,7 @@
 
 	http://${host}:6003/lms/trans 
 
-	发生数据格式:{dbtype:"mysql",url:"127.0.0.1",port:"3306",dbname:"chatroom",username:"root",password:"123456",column:[{name:"id"},{name:"password"}],tableName: "account"}
+	发生数据格式:dbtype:"mysql",url:"127.0.0.1",port:"3306",dbname:"chatroom",username:"root",password:"123456",tables:{name:"account",columns:["*"],fk:"true"}}
 	
 
 ---
@@ -29,4 +29,5 @@
 ### Ver. 1.0 (20150812) ###
 * Original version.
 
-
+### Ver. 1.1 (20150815) ###
+*Add foreign keys search.

@@ -15,6 +15,7 @@ public class DbUtil {
     public Connection conn = null;
     public Statement stat = null;
     public ResultSet rs = null;
+   // public DatabaseMetaData dbm = null;
 
     /**
      *根据数据库类型来判别属于哪种数据库，并进行连接。
@@ -52,6 +53,7 @@ public class DbUtil {
                         ("jdbc:mysql://" + url + ":" + port + "/" + dbname, username, password);
             System.out.println("Connected Mysql!");//测试语言判断数据库连接是否成功
             stat = conn.createStatement();
+           // dbm = conn.getMetaData();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -76,6 +78,7 @@ public class DbUtil {
             System.out.println(u);
             conn = DriverManager.getConnection(u,username,password);
             stat = conn.createStatement();
+           // dbm = conn.getMetaData();
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -96,6 +99,7 @@ public class DbUtil {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             conn = DriverManager.getConnection("jdbc:sqlserver://" + url + ":" + port + ";databaseName=" + dbname,username,password);
             stat = conn.createStatement();
+            //dbm = conn.getMetaData();
         } catch (Exception e1) {
             e1.printStackTrace();
         }
