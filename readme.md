@@ -37,3 +37,6 @@
 
 ### Ver. 1.3 (20150815) ###
 Return error message.
+
+### Ver. 1.4 (20150817) ###
+Support Oracle!

@@ -78,6 +78,7 @@ public class DbUtil {
     public boolean OracleConnect(String url,String port,String dbname,String username,String password){
         try {
             Class.forName("oracle.jdbc.OracleDriver");
+            System.out.println(Class.forName("oracle.jdbc.OracleDriver").getCanonicalName());
             String u = "jdbc:oracle:thin:@" + url + ":" + port + ":" + dbname;
             System.out.println(u);
             conn = DriverManager.getConnection(u,username,password);

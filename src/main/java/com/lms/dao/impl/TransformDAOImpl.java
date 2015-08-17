@@ -3,6 +3,7 @@ package com.lms.dao.impl;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.lms.dao.TransformDAO;
 import com.lms.util.DbUtil;
+import com.lms.util.OracleDataBaseMeta;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Repository;
@@ -62,31 +63,36 @@ public class TransformDAOImpl implements TransformDAO {
         //System.out.println(sql);
         boolean flag = dbUtil.SQLConnect(dbtype, url, port, dbname, username, password); //调用数据库连接接口对数据库进行连接
         if(flag==false){
-            return "{\"Meta\":{\"Code\":200,\"Message\":\"数据库连接失败，请核对数据库地址及账号密码！\"},\"Data\":" + "[]" + "}";
+            return "{\"Meta\":{\"Code\":203,\"Message\":\"数据库连接失败，请核对数据库地址及账号密码！\"},\"Data\":" + "[]" + "}";
         }
         //判断是否需要取出外键数据。
         if(fk.equals("true")) {
             try {
-                /**
-                 * 读取外键数据。
-                 */
-                ResultSet rs1 = dbUtil.conn.getMetaData().getExportedKeys(null, null, tableName);
-                ResultSetMetaData rsmd1 = rs1.getMetaData();
-                System.out.println(tableName);
-                while (rs1.next()) {
-                    Map<String, String> fkMes = new HashMap<String, String>();
-                   /* for(int m = 1;m<=rsmd1.getColumnCount();m++){
+                if(dbtype.equals("oracle")){
+                    OracleDataBaseMeta odbm = new OracleDataBaseMeta();
+                    fks = odbm.getDataMeta(dbUtil.conn,tableName.toUpperCase());
+                }else {
+                    /**
+                     * 读取外键数据。
+                     */
+                    ResultSet rs1 = dbUtil.conn.getMetaData().getExportedKeys(null, null, tableName);
+                    //if(rs1.next()==false){System.out.println("NULLNULLNULL!!!");}
+                    ResultSetMetaData rsmd1 = rs1.getMetaData();
+                    //System.out.println(tableName);
+                    while (rs1.next()) {
+                        Map<String, String> fkMes = new HashMap<String, String>();
+                   /*for(int m = 1;m<=rsmd1.getColumnCount();m++){
                         System.out.println(rsmd1.getColumnName(m) + ":" + rs1.getString(rsmd1.getColumnName(m)));
                     }*/
-                    System.out.println("PKTABLE_NAME:" + rs1.getString("PKTABLE_NAME") + "   " + "PKCOLUMN_NAME:" + rs1.getString("PKCOLUMN_NAME") + "||" + "FKTABLE_NAME:" + rs1.getString("FKTABLE_NAME") + "   " + "FKCOLUMN_NAME:" + rs1.getString("FKCOLUMN_NAME"));
-                    // System.out.println("FKTABLE_NAME:" + rs1.getString("FKTABLE_NAME") + "||" + "FKCOLUMN_NAME:" + rs1.getString("FKCOLUMN_NAME"));
-                    //fkMes.put("PKTABLE_NAME",rs1.getString("PKTABLE_NAME"));
-                    fkMes.put("PKCOLUMN_NAME", rs1.getString("PKCOLUMN_NAME"));
-                    fkMes.put("FKTABLE_NAME", rs1.getString("FKTABLE_NAME"));
-                    fkMes.put("FKCOLUMN_NAME", rs1.getString("FKCOLUMN_NAME"));
-                    fks.add(fkMes);
+                        System.out.println("PKTABLE_NAME:" + rs1.getString("PKTABLE_NAME") + "   " + "PKCOLUMN_NAME:" + rs1.getString("PKCOLUMN_NAME") + "||" + "FKTABLE_NAME:" + rs1.getString("FKTABLE_NAME") + "   " + "FKCOLUMN_NAME:" + rs1.getString("FKCOLUMN_NAME"));
+                        // System.out.println("FKTABLE_NAME:" + rs1.getString("FKTABLE_NAME") + "||" + "FKCOLUMN_NAME:" + rs1.getString("FKCOLUMN_NAME"));
+                        //fkMes.put("PKTABLE_NAME",rs1.getString("PKTABLE_NAME"));
+                        fkMes.put("PKCOLUMN_NAME", rs1.getString("PKCOLUMN_NAME"));
+                        fkMes.put("FKTABLE_NAME", rs1.getString("FKTABLE_NAME"));
+                        fkMes.put("FKCOLUMN_NAME", rs1.getString("FKCOLUMN_NAME"));
+                        fks.add(fkMes);
+                    }
                 }
-
                 /**
                  * 判断需要查询的字段有没有被外键引用。
                  */
@@ -144,7 +150,7 @@ public class TransformDAOImpl implements TransformDAO {
                 while (dbUtil.rs.next()) {
                     Map<String, Object> jsonObject = new HashMap<String, Object>();
                     for (int j = 1; j <= rsmd.getColumnCount(); j++) {  //通过ResultSetMetaData得到rs中的数据column的个数
-                        String key = rsmd.getTableName(j) + "_" + rsmd.getColumnName(j);//得到ResultSet中每个column的Name
+                        String key = tableName + "_" + rsmd.getColumnName(j);//得到ResultSet中每个column的Name
                         String value = dbUtil.rs.getString(j);//得到每个字段的value
                         //System.out.println(key + ":" + value);
                         jsonObject.put(key, value);//将得到的key和value注入到map中
@@ -198,7 +204,7 @@ public class TransformDAOImpl implements TransformDAO {
                 while (dbUtil.rs.next()){
                     Map<String,Object> jsonObject = new HashMap<String, Object>();
                     for (int j=1;j<=rsmd.getColumnCount();j++){  //通过ResultSetMetaData得到rs中的数据column的个数
-                        String key = rsmd.getColumnName(j);//得到ResultSet中每个column的Name
+                        String key = tableName + "_" + rsmd.getColumnName(j);//得到ResultSet中每个column的Name
                         String value = dbUtil.rs.getString(j);//得到每个字段的value
                         //System.out.println(key + ":" + value);
                         jsonObject.put(key,value);//将得到的key和value注入到map中
