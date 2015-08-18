@@ -153,7 +153,7 @@ public class TransformDAOImpl implements TransformDAO {
                         String key = tableName + "_" + rsmd.getColumnName(j);//得到ResultSet中每个column的Name
                         String value = dbUtil.rs.getString(j);//得到每个字段的value
                         //System.out.println(key + ":" + value);
-                        jsonObject.put(key, value);//将得到的key和value注入到map中
+                        jsonObject.put(key.toLowerCase(), value);//将得到的key和value注入到map中
                         Set keySet = colMap.keySet();
                         Iterator<String> it = keySet.iterator();
                         while (it.hasNext()) {
@@ -174,11 +174,11 @@ public class TransformDAOImpl implements TransformDAO {
                                         for (int k = 1; k <= rsdm1.getColumnCount(); k++) {
                                             String fkey = rsdm1.getColumnName(k);
                                             String fValue = rs2.getString(k);
-                                            fkMap.put(fkey, fValue);
+                                            fkMap.put(fkey.toLowerCase(), fValue);
                                         }
                                         fkList.add(fkMap);
                                     }
-                                    jsonObject.put(Meg[0], fkList);
+                                    jsonObject.put(Meg[0].toLowerCase(), fkList);
                                 }
                             }
                         }
@@ -207,7 +207,7 @@ public class TransformDAOImpl implements TransformDAO {
                         String key = tableName + "_" + rsmd.getColumnName(j);//得到ResultSet中每个column的Name
                         String value = dbUtil.rs.getString(j);//得到每个字段的value
                         //System.out.println(key + ":" + value);
-                        jsonObject.put(key,value);//将得到的key和value注入到map中
+                        jsonObject.put(key.toLowerCase(),value);//将得到的key和value注入到map中
                     }
                     list.add(jsonObject);//将每个map注入list中
                     //JSONObject json = JSONObject.fromObject(jsonObject);
