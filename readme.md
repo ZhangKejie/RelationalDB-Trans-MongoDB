@@ -18,9 +18,26 @@
     
    	POST
 
-	http://${host}:6003/lms/trans 
+	http://${host}:6010/lms/trans 
 
-	发送数据格式:{dbtype:"mysql",url:"127.0.0.1",port:"3306",dbname:"chatroom",username:"root",password:"123456",tables:{name:"account",columns:["*"],fk:"true"}}
+	发送数据格式:{
+    "company_id":"2",
+    "datatree":{
+        "dbtype": "oracle",
+        "host": "127.0.0.1",
+        "port": "1521",
+        "dbname": "orcl",
+        "username": "test1",
+        "password": "root"
+    },
+    "tables": {
+        "name": "user1",
+        "columns": [
+            "*"
+        ],
+        "fk": "true"
+    }
+}
 	
 
 ---
@@ -43,3 +60,6 @@ Support Oracle!
 
 ### Ver. 1.5 (20150818) ###
 All Database feilds are changed to lowercase.
+
+### Ver. 1.6 (20150820) ###
+Add Primary Key.

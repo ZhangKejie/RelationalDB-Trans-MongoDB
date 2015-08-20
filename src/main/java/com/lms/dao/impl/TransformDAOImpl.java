@@ -39,12 +39,15 @@ public class TransformDAOImpl implements TransformDAO {
         String str = "";
 
         //得到json数据中传递过来的参数
-        String dbtype = (String) map.get("dbtype");
-        String url = (String) map.get("url");
-        String port = (String) map.get("port");
-        String dbname = (String) map.get("dbname");
-        String username = (String) map.get("username");
-        String password = (String) map.get("password");
+        String company_id = (String) map.get("company_id");
+        List<String> pks = new ArrayList<String>();   //主键储存处
+        Map<String,String> dmap = (Map<String, String>) map.get("datatree");
+        String dbtype = (String) dmap.get("dbtype");
+        String host = (String) dmap.get("host");
+        String port = (String) dmap.get("port");
+        String dbname = (String) dmap.get("dbname");
+        String username = (String) dmap.get("username");
+        String password = (String) dmap.get("password");
         //List<Object> tables = (List<Object>) map.get("tables");
         Map<String, Object> tables = (Map<String, Object>) map.get("tables");
         String fk = (String) tables.get("fk");
@@ -61,10 +64,42 @@ public class TransformDAOImpl implements TransformDAO {
         String tableName = (String) tables.get("name");
         String sql = "select" + " " + columnName + " from " + tableName;
         //System.out.println(sql);
-        boolean flag = dbUtil.SQLConnect(dbtype, url, port, dbname, username, password); //调用数据库连接接口对数据库进行连接
+        boolean flag = dbUtil.SQLConnect(dbtype,host, port, dbname, username, password); //调用数据库连接接口对数据库进行连接
         if(flag==false){
-            return "{\"Meta\":{\"Code\":203,\"Message\":\"数据库连接失败，请核对数据库地址及账号密码！\"},\"Data\":" + "[]" + "}";
+            return "{\"Meta\":{\"Code\":203,\"Message\":\"数据库连接失败，请核对数据库地址及账号密码！\"},\"Data\":" + "{}" + "}";
         }
+
+        //取出数据库主键信息
+        if(dbtype.equals("oracle")){
+            try {
+                Statement stat2 = dbUtil.conn.createStatement();
+                String sql1 = "select cu.column_name from user_cons_columns cu,user_constraints au where cu.constraint_name=au.constraint_name and au.constraint_type='P' and au.table_name='" + tableName.toUpperCase() + "'";
+                ResultSet rs3 = stat2.executeQuery(sql1);
+                while(rs3.next()){
+                    String pk = rs3.getString("COLUMN_NAME");
+                    System.out.println("PRIMARY_KEY:" + pk);
+                    pks.add(pk);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }else {
+            try {
+                ResultSet rs2 = dbUtil.conn.getMetaData().getPrimaryKeys(null, null, tableName);
+                ResultSetMetaData rsmd2 = rs2.getMetaData();
+                while (rs2.next()) {
+                    String primary_key = rs2.getString("COLUMN_NAME");
+                        /*for(int m = 1;m<=rsmd2.getColumnCount();m++){
+                        System.out.println( "主键："+ rsmd2.getColumnName(m) + ":" + rs2.getString(rsmd2.getColumnName(m)));
+                        }*/
+                    System.out.println("PRIMARY_KEY:" + primary_key.toLowerCase());
+                    pks.add(primary_key);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        String str2 = JSONArray.fromObject(pks).toString();
         //判断是否需要取出外键数据。
         if(fk.equals("true")) {
             try {
@@ -76,8 +111,10 @@ public class TransformDAOImpl implements TransformDAO {
                      * 读取外键数据。
                      */
                     ResultSet rs1 = dbUtil.conn.getMetaData().getExportedKeys(null, null, tableName);
+
                     //if(rs1.next()==false){System.out.println("NULLNULLNULL!!!");}
                     ResultSetMetaData rsmd1 = rs1.getMetaData();
+
                     //System.out.println(tableName);
                     while (rs1.next()) {
                         Map<String, String> fkMes = new HashMap<String, String>();
@@ -195,8 +232,9 @@ public class TransformDAOImpl implements TransformDAO {
             // }
             jsonArray = JSONArray.fromObject(list);//将list对象转化为jsonArray的类型
             str = jsonArray.toString();
+
             // System.out.println(str);
-            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":" + str + "}";
+            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":{\"SQL_ID\":" + str2 + "," + "\"columns\":" + str + "}}";
         }else{//不需要取出外键数据
             try {
                 dbUtil.rs = dbUtil.stat.executeQuery(sql);//数据库操作后得到的结果
@@ -219,7 +257,7 @@ public class TransformDAOImpl implements TransformDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":" + str + "}";
+            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":{\"SQL_ID\":" + str2 + "," + "\"columns\":" + str + "}}";
         }
     }
 
