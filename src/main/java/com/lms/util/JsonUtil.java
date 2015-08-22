@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 解析json工具类。
- * Created by Asus55 on 2015/8/12.
+ * Created by ZKJ on 2015/8/12.
  */
 @Component("jsonUtil")
 public class JsonUtil {

@@ -77,8 +77,8 @@ public class TransformDAOImpl implements TransformDAO {
                 ResultSet rs3 = stat2.executeQuery(sql1);
                 while(rs3.next()){
                     String pk = rs3.getString("COLUMN_NAME");
-                    System.out.println("PRIMARY_KEY:" + pk);
-                    pks.add(pk);
+                    System.out.println("PRIMARY_KEY:" + tableName.toLowerCase() + "_" + pk);
+                    pks.add(tableName.toLowerCase() + "_" + pk);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -93,7 +93,7 @@ public class TransformDAOImpl implements TransformDAO {
                         System.out.println( "主键："+ rsmd2.getColumnName(m) + ":" + rs2.getString(rsmd2.getColumnName(m)));
                         }*/
                     System.out.println("PRIMARY_KEY:" + primary_key.toLowerCase());
-                    pks.add(primary_key);
+                    pks.add(tableName.toLowerCase() + "_" +primary_key);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -234,7 +234,7 @@ public class TransformDAOImpl implements TransformDAO {
             str = jsonArray.toString();
 
             // System.out.println(str);
-            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":{\"SQL_ID\":" + str2 + "," + "\"columns\":" + str + "}}";
+            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":{\"sql_id\":" + str2 + "," + "\"columns\":" + str + "}}";
         }else{//不需要取出外键数据
             try {
                 dbUtil.rs = dbUtil.stat.executeQuery(sql);//数据库操作后得到的结果
@@ -257,7 +257,7 @@ public class TransformDAOImpl implements TransformDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":{\"SQL_ID\":" + str2 + "," + "\"columns\":" + str + "}}";
+            return "{\"Meta\":{\"Code\":200,\"Message\":\"转化成功！\"},\"Data\":{\"sql_id\":" + str2 + "," + "\"columns\":" + str + "}}";
         }
     }
 
